@@ -18,6 +18,7 @@ A local desktop reconnaissance and asset-auditing dashboard. It takes a target h
 - Port to electron for easier running.
 
 ## Current Project Layout
+```
 OS-RECON/
 ├── backend/                  # The backend server folder, handles scraping & processing.
 │   ├── engines/              # Scrapers and parsers depending on input type.
@@ -25,6 +26,7 @@ OS-RECON/
 │   │   └── social_engine.py  # Asynchronous username check registry & probe logic.
 │   └── main.py               # FastAPI application server.
 └── frontend/                 # React TS + Vite frontend UI.
+```
 
 ## How to Run
 
