@@ -98,11 +98,11 @@ export function RepoTable({ repos, username }: RepoTableProps) {
                       <td colSpan={4} style={{ padding: '1rem' }}>
                         <div style={{ borderLeft: '2px solid #00ff66', paddingLeft: '1rem' }}>
                           <h4 style={{ margin: '0 0 0.75rem 0', color: '#00ff66', fontSize: '0.9rem' }}>
-                            // COMMIT LOG STREAM FOR: {repo.name.toUpperCase()}
+                            // COMMIT LOG FOR: {repo.name.toUpperCase()}
                           </h4>
                           
                           {isScanning && (
-                            <p style={{ color: '#888', margin: 0, fontStyle: 'italic' }}>Interrogating target repository histories...</p>
+                            <p style={{ color: '#888', margin: 0, fontStyle: 'italic' }}>Scanning for repository history</p>
                           )}
 
                           {!isScanning && commits && commits.length === 0 && (
