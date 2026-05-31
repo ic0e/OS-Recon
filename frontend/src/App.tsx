@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Repo } from './components/Repo'; // Adjust the import path as needed
 
 function App() {
   const [inputTarget, setInputTarget] = useState('');
@@ -59,9 +60,9 @@ function App() {
           {isScanning ? 'PARSING ENGINE...' : 'ANALYZE'}
         </button>
         <button
-        onClick={clearLog}
-        disabled={isScanning}
-        style={{ 
+          onClick={clearLog}
+          disabled={isScanning}
+          style={{ 
             background: '#00ff66', color: '#000', border: 'none', padding: '0.75rem 1.75rem', 
             cursor: 'pointer', fontWeight: 'bold', fontFamily: 'monospace' 
           }}
@@ -86,23 +87,14 @@ function App() {
 
           {/* TOP SECTION: PRIORITY / HIGH INTEREST ITEMS */}
           <div style={{ marginBottom: '2.5rem' }}>
-            <h4 style={{ color: '#ff3333', borderBottom: '1px dashed #ff3333', paddingBottom: '0.5rem' }}>HIGH INTEREST TARGET ASSETS ({scanData.metrics.interesting_count})</h4>
+            <h4 style={{ color: '#ff3333', borderBottom: '1px dashed #ff3333', paddingBottom: '0.5rem' }}>
+              HIGH INTEREST TARGET ASSETS ({scanData.metrics.interesting_count})
+            </h4>
             {scanData.interesting.length === 0 ? (
               <p style={{ color: '#888', fontStyle: 'italic' }}>No high priority indicators flagged inside asset metadata.</p>
             ) : (
               scanData.interesting.map((repo: any, idx: number) => (
-                <div key={idx} style={{ background: '#221111', border: '1px solid #ff3333', padding: '1rem', margin: '1rem 0', borderRadius: '4px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <strong style={{ color: '#ff6666', fontSize: '1.1rem' }}>{repo.name}</strong>
-                    <span style={{ fontSize: '0.85rem', background: '#331111', padding: '0.2rem 0.5rem', border: '1px solid #ff3333' }}>★ {repo.stars} | {repo.language}</span>
-                  </div>
-                  <p style={{ color: '#ccc', margin: '0.5rem 0' }}>{repo.description || "No project description provided."}</p>
-                  <div style={{ marginTop: '0.5rem' }}>
-                    {repo.reasons.map((reason: string, rIdx: number) => (
-                      <div key={rIdx} style={{ color: '#ff9999', fontSize: '0.85rem' }}>• {reason}</div>
-                    ))}
-                  </div>
-                </div>
+                <Repo key={idx} repo={repo} />
               ))
             )}
           </div>
