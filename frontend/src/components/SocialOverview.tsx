@@ -1,0 +1,85 @@
+import { useState } from 'react';
+import { SocialResults } from './SocialResults';
+import { OverviewTab } from './OverviewTab';
+
+interface SocialOverviewProps {
+  socialData: any;
+  gitData: any | null;
+}
+
+export function SocialOverview({ socialData, gitData }: SocialOverviewProps) {
+  const [activeSection, setActiveSection] = useState<'social' | 'github'>('social');
+  const [showStandardList, setShowStandardList] = useState(false);
+
+  const hasGitHub = gitData !== null;
+
+  return (
+    <div>
+      {/* Section toggle — only show if GitHub data exists */}
+      {hasGitHub && (
+        <div style={{
+          display: 'flex', gap: '1rem', marginBottom: '1.5rem',
+          borderBottom: '1px solid #333', paddingBottom: '1rem',
+        }}>
+          <button
+            onClick={() => setActiveSection('social')}
+            style={{
+              background: activeSection === 'social' ? '#00ff66' : '#141414',
+              color: activeSection === 'social' ? '#000' : '#00ff66',
+              border: activeSection === 'social' ? 'none' : '1px solid #00ff66',
+              padding: '0.75rem 1.75rem',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontFamily: 'monospace',
+            }}
+          >
+            SOCIAL PROFILES
+          </button>
+          <button
+            onClick={() => setActiveSection('github')}
+            style={{
+              background: activeSection === 'github' ? '#00ff66' : '#141414',
+              color: activeSection === 'github' ? '#000' : '#00ff66',
+              border: activeSection === 'github' ? 'none' : '1px solid #00ff66',
+              padding: '0.75rem 1.75rem',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontFamily: 'monospace',
+            }}
+          >
+            GITHUB DETAILS
+          </button>
+        </div>
+      )}
+
+      {/* Social section */}
+      {activeSection === 'social' && (
+        <SocialResults
+          results={socialData.results}
+          categories={socialData.categories}
+          totalFound={socialData.total_found}
+          totalChecked={socialData.total_checked}
+        />
+      )}
+
+      {/* GitHub deep-dive section */}
+      {activeSection === 'github' && gitData && (
+        <div>
+          <div style={{
+            background: '#141414', padding: '1rem', marginBottom: '1.5rem',
+            borderLeft: '4px solid #00ff66',
+          }}>
+            <p style={{ color: '#aaa', fontFamily: 'monospace', fontSize: '0.85rem', margin: 0 }}>
+              GitHub profile was found during the social scan. Below is a detailed analysis of the account's repositories.
+            </p>
+          </div>
+          <OverviewTab
+            scanData={gitData}
+            showStandardList={showStandardList}
+            setShowStandardList={setShowStandardList}
+          />
+        </div>
+      )}
+    </div>
+  );
+}

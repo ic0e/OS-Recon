@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 # import the analysis function from your local git_engine file
 from engines.git_engine import analyze_github_target, fetch_repo_commits
+from engines.social_engine import scan_username
 
 app = FastAPI()
 
@@ -23,6 +24,12 @@ class CommitRequest(BaseModel):
     target: str
     username: str
 
+
+def _is_github_input(text: str) -> bool:
+    """Check if the input is specifically targeting GitHub (URL or github-specific format)."""
+    return "github.com" in text
+
+
 @app.post("/api/scan")
 async def handle_scan(request: ScanRequest):
     input_data = request.target.strip()
@@ -30,32 +37,43 @@ async def handle_scan(request: ScanRequest):
     if not input_data:
         raise HTTPException(status_code=400, detail="Target cannot be empty.")
     
-    if "github.com" in input_data or not input_data.startswith("http"):
+    if _is_github_input(input_data):
+        # Direct GitHub URL -> git engine only
+        git_data = await analyze_github_target(input_data)
+        social_result = await scan_username(git_data["username"])
         
-        result = await analyze_github_target(input_data)
-        
-        if "error" in result:
-            raise HTTPException(status_code=400, detail=result["error"])
+        if "error" in git_data:
+            raise HTTPException(status_code=400, detail=git_data["error"])
             
         return {
             "status": "completed",
-            "engine": "git",
-            "data": result
+            "engine": "social",
+            "data": social_result,
+            "git_data": git_data
         }
-        
+    
     else:
+        # Plain username -> social media scan
+        social_result = await scan_username(input_data)
+        
+        if "error" in social_result:
+            raise HTTPException(status_code=400, detail=social_result["error"])
+        
+        # If GitHub was found in social results, automatically run git engine too
+        git_data = None
+        if social_result.get("github_username"):
+            git_result = await analyze_github_target(social_result["github_username"])
+            if "error" not in git_result:
+                git_data = git_result
+        
         return {
             "status": "completed",
             "engine": "social",
-            "data": {
-                "username": input_data,
-                "profile_url": input_data,
-                "metrics": {"total": 0, "interesting_count": 0, "standard_count": 0},
-                "interesting": [],
-                "standard": []
-            }
+            "data": social_result,
+            "git_data": git_data,
         }
     
+
 @app.post("/api/scanCommits")
 async def handle_scan_commits(request: CommitRequest):
     repo_name = request.target.strip()

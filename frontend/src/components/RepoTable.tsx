@@ -58,10 +58,10 @@ export function RepoTable({ repos, username }: RepoTableProps) {
         <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid #333', color: '#888' }}>
-              <th style={{ padding: '0.5rem' }}>Asset Identifier</th>
-              <th style={{ padding: '0.5rem' }}>Environment</th>
-              <th style={{ padding: '0.5rem' }}>Metrics</th>
-              <th style={{ padding: '0.5rem' }}>Info</th>
+              <th style={{ padding: '0.5rem' }}>Repository</th>
+              <th style={{ padding: '0.5rem' }}>Language</th>
+              <th style={{ padding: '0.5rem' }}>Stars</th>
+              <th style={{ padding: '0.5rem' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -98,15 +98,15 @@ export function RepoTable({ repos, username }: RepoTableProps) {
                       <td colSpan={4} style={{ padding: '1rem' }}>
                         <div style={{ borderLeft: '2px solid #00ff66', paddingLeft: '1rem' }}>
                           <h4 style={{ margin: '0 0 0.75rem 0', color: '#00ff66', fontSize: '0.9rem' }}>
-                            // COMMIT LOG FOR: {repo.name.toUpperCase()}
+                            Commits for {repo.name}
                           </h4>
                           
                           {isScanning && (
-                            <p style={{ color: '#888', margin: 0, fontStyle: 'italic' }}>Scanning for repository history</p>
+                            <p style={{ color: '#888', margin: 0, fontStyle: 'italic' }}>Loading commit history...</p>
                           )}
 
                           {!isScanning && commits && commits.length === 0 && (
-                            <p style={{ color: '#666', margin: 0 }}>No dynamic commits recorded on public trunk.</p>
+                            <p style={{ color: '#666', margin: 0 }}>No public commits found.</p>
                           )}
 
                           {!isScanning && commits && commits.map((commit: any, cIdx: number) => (

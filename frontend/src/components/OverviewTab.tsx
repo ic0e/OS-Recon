@@ -20,11 +20,11 @@ export function OverviewTab({ scanData, showStandardList, setShowStandardList }:
     <div>
       <div style={{ marginBottom: '2.5rem' }}>
         <h4 style={{ color: '#ff3333', borderBottom: '1px dashed #ff3333', paddingBottom: '0.5rem' }}>
-          HIGH INTEREST TARGET ASSETS ({scanData.metrics.interesting_count})
+          FLAGGED REPOSITORIES ({scanData.metrics.interesting_count})
         </h4>
         {scanData.interesting.length === 0 ? (
           <p style={{ color: '#888', fontStyle: 'italic' }}>
-            No high priority indicators flagged inside asset metadata.
+            No repositories matched sensitive keyword patterns.
           </p>
         ) : (
           scanData.interesting.map((repo: any, idx: number) => (
@@ -50,7 +50,7 @@ export function OverviewTab({ scanData, showStandardList, setShowStandardList }:
           }}
         >
           <span>
-            {showStandardList ? '▼ HIDE' : '▶ SHOW'} ALL OTHER RECORDED FOOTPRINTS ({scanData.metrics.standard_count})
+            {showStandardList ? '▼ Hide' : '▶ Show'} all other repositories ({scanData.metrics.standard_count})
           </span>
           <span>{showStandardList ? 'Collapse' : 'Expand'}</span>
         </button>
