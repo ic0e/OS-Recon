@@ -90,7 +90,9 @@ SITES = {
     },
     "Hashnode": {
         "url": "https://hashnode.com/@{}",
-        "errorType": "status_code",
+        "errorType": "message",
+        "errorMsg": "This page no longer exists.",
+        "invertMatch": False,
         "category": "development",
     },
     "LinkedIn": {
@@ -218,11 +220,6 @@ SITES = {
         "url": "https://www.kaggle.com/{}",
         "errorType": "status_code",
         "category": "development",
-    },
-    "Trello": {
-        "url": "https://trello.com/{}",
-        "errorType": "status_code",
-        "category": "professional",
     },
     "Telegram": {
         "url": "https://t.me/{}",
