@@ -3,21 +3,6 @@
 A local desktop reconnaissance and asset-auditing dashboard. It takes a target handle or link, queries public networks, runs custom evaluation logic on the data, and splits the findings into prioritized risks vs. general logs.
 
 ## FEATURES ATM: (readme last updated on May 31 2026)
-<<<<<<< HEAD
-- Tabbed dashboard UI with Overview, Analytics, and Social overview sections.
-- FastAPI server backend running asynchronous, fetching with httpx.
-- Username scanner that checks 50+ websites concurrently and groups results by category (development, social, gaming, media, blogging, professional, design, security).
-- Automatic GitHub deep-scan if a profile is discovered during the social scan, or if a GitHub link is queried directly.
-- Risk filter that parses repositories and splits them into "interesting" vs "standard" based on sensitive keywords in metadata, popularity, and profile configuration vaults.
-- Asynchronous commit history checker to fetch and audit public commits directly in the accordion UI.
-
-## FUTURE FEATURES TASKLIST:
-- Deep source code scanner looking for secrets inside files.
-- Exporting scan results to JSON or PDF.
-- GitHub API token support to avoid anonymous rate limits.
-
-## Current Project Layout
-=======
 - Tabbed dashboard UI with overview and social overview sections.
 - FastAPI server backend running asynchronous, fetching with httpx.
 - Username scanner that checks 50+ websites concurrently and groups results by category (development, social, gaming, media, etc.)
@@ -34,7 +19,6 @@ A local desktop reconnaissance and asset-auditing dashboard. It takes a target h
 
 ## Current Project Layout
 ```
->>>>>>> 3defecebc8f26b3847a686d94e6da35afcb1ea78
 OS-RECON/
 ├── backend/                  # The backend server folder, handles scraping & processing.
 │   ├── engines/              # Scrapers and parsers depending on input type.
@@ -42,10 +26,7 @@ OS-RECON/
 │   │   └── social_engine.py  # Asynchronous username check registry & probe logic.
 │   └── main.py               # FastAPI application server.
 └── frontend/                 # React TS + Vite frontend UI.
-<<<<<<< HEAD
-=======
 ```
->>>>>>> 3defecebc8f26b3847a686d94e6da35afcb1ea78
 
 ## How to Run
 
