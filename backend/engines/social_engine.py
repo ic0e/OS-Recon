@@ -318,6 +318,7 @@ async def _check_site(
                     "url": site_cfg["url"].format(username).replace("/about.json", ""),
                     "category": site_cfg.get("category", "other"),
                     "status": resp.status_code,
+                    "username": username
                 }
 
         except (httpx.TimeoutException, httpx.ConnectError, httpx.ReadError, Exception):

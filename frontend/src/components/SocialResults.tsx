@@ -3,6 +3,7 @@ interface SocialResult {
   site: string;
   url: string;
   category: string;
+  username: string;
   status: number;
 }
 
@@ -125,9 +126,14 @@ export function SocialResults({ results, categories, totalFound, totalChecked }:
                     e.currentTarget.style.background = '#141414';
                   }}
                 >
-                  <span style={{ color: '#fff', fontFamily: 'monospace', fontSize: '0.9rem' }}>
-                    {result.site}
-                  </span>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '2px' }}>
+                    <span style={{ color: '#fff', fontFamily: 'monospace', fontSize: '0.9rem' }}>
+                      {result.site}
+                    </span>
+                    <span style={{ color: '#aaa', fontFamily: 'monospace', fontSize: '0.75rem' }}>
+                      @{result.username}
+                    </span>
+                  </div>
                   <span style={{ color: '#666', fontFamily: 'monospace', fontSize: '0.75rem' }}>
                     ↗
                   </span>
