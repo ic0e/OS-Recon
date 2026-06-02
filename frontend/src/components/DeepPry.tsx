@@ -61,7 +61,7 @@ const cleanRawValue = (val: any): string => {
 
 export function DeepPryLaunchpad(): React.JSX.Element {
   const { stagedProfiles, removeProfile, clearStage } = useScanner() as {
-  stagedProfiles: Record<string, SocialResult>;
+  stagedProfiles: Record<string, StagedProfile>;
   removeProfile: (username: string, site: string) => void;
   clearStage: () => void;
 };
@@ -341,7 +341,7 @@ export function DeepPryLaunchpad(): React.JSX.Element {
                   <p style={{ color: '#888', fontSize: '0.7rem', margin: '2px 0 0 0' }}>{profile.url}</p>
                 </div>
                 <button
-                  onClick={() => removeProfile(profile.site)}
+                  onClick={() => removeProfile(profile.username, profile.site)}
                   style={{ background: 'transparent', border: '1px solid #ff444440', color: '#ff4444', fontFamily: 'monospace', fontSize: '0.7rem', padding: '0.15rem 0.35rem', cursor: 'pointer', borderRadius: '3px' }}
                   onMouseEnter={(e) => { e.currentTarget.style.background = '#ff444415'; }}
                   onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
