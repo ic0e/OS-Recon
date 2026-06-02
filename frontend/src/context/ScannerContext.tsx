@@ -11,7 +11,7 @@ export interface SocialResult {
 interface ScannerContextType {
   stagedProfiles: Record<string, SocialResult>;
   toggleProfile: (profile: SocialResult) => void;
-  removeProfile: (site: string) => void;
+  removeProfile: (username: string, site: string) => void;
   clearStage: () => void;
 }
 
@@ -21,21 +21,25 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [stagedProfiles, setStagedProfiles] = useState<Record<string, SocialResult>>({});
 
   const toggleProfile = (profile: SocialResult) => {
+    // uses the compositekey to have the PRY button unique across all usernames
+    const compositeKey = `${profile.username}-${profile.site}`;
+
     setStagedProfiles((prev) => {
       const copy = { ...prev };
-      if (copy[profile.site]) {
-        delete copy[profile.site];
+      if (copy[compositeKey]) {
+        delete copy[compositeKey];
       } else {
-        copy[profile.site] = profile;
+        copy[compositeKey] = profile;
       }
       return copy;
     });
   };
 
-  const removeProfile = (site: string) => {
+  const removeProfile = (username: string, site: string) => {
+    const compositeKey = `${username}-${site}`;
     setStagedProfiles((prev) => {
       const copy = { ...prev };
-      delete copy[site];
+      delete copy[compositeKey];
       return copy;
     });
   };

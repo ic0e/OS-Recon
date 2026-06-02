@@ -61,10 +61,10 @@ const cleanRawValue = (val: any): string => {
 
 export function DeepPryLaunchpad(): React.JSX.Element {
   const { stagedProfiles, removeProfile, clearStage } = useScanner() as {
-    stagedProfiles: Record<string, StagedProfile>;
-    removeProfile: (site: string) => void;
-    clearStage: () => void;
-  };
+  stagedProfiles: Record<string, SocialResult>;
+  removeProfile: (username: string, site: string) => void;
+  clearStage: () => void;
+};
 
   const stagedArray: StagedProfile[] = Object.values(stagedProfiles);
 

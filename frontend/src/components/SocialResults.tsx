@@ -162,7 +162,8 @@ export function SocialResults({ results, categories, totalFound, totalChecked }:
                       }}>
                         {userResults.map((result, idx) => {
                           const isBlocked = result.status === 'Blocked';
-                          const isStaged = !!stagedProfiles[result.site];
+                          const profileKey = `${result.username}-${result.site}`;
+                          const isStaged = !!stagedProfiles[profileKey];
 
                           return (
                             <a
