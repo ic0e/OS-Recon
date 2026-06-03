@@ -1,3 +1,6 @@
 fastapi[standard]
+uvicorn
 httpx
+curl_cffi
 pydantic
+nodriver
