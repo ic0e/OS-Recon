@@ -391,11 +391,25 @@ async def _check_site(
     return None
 
 async def scan_username(username: str) -> dict:
-    username = username.strip().lstrip("@")
-    if not username or not re.match(r"^[a-zA-Z0-9._-]{1,40}$", username):
-        return {"error": "Invalid username format."}
+    
+    if ',' in username:
+        variations = [u.strip().lstrip("@") for u in username.split(',') if u.strip()]
 
-    variations = generate_username_variations(username)
+        if not variations:
+            return {"error": "No valid usernames provided."}
+        
+        # Validate format for each username
+        for var in variations:
+            if not re.match(r"^[a-zA-Z0-9._-]{1,40}$", var):
+                return {"error": f"Invalid username format: '{var}'"}
+    else:
+        cleaned_username = username.strip().lstrip("@")
+        if not cleaned_username or not re.match(r"^[a-zA-Z0-9._-]{1,40}$", cleaned_username):
+            return {"error": "Invalid username format."}
+        
+        # Generate variations if it's a single input
+        variations = generate_username_variations(cleaned_username)
+
     semaphore = asyncio.Semaphore(15)
 
     headers = {

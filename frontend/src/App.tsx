@@ -71,7 +71,7 @@ function App() {
     <div style={{ padding: '2.5rem', fontFamily: 'monospace', background: '#0d0d0d', color: '#00ff66', minHeight: '100vh' }}>
       <h2>OS-Recon</h2>
       <p style={{ color: '#888', marginTop: '-0.5rem', marginBottom: '1.5rem', fontSize: '0.85rem' }}>
-        Open source intelligence scanner
+        Open source intelligence username & GitHub scanner
       </p>
 
       <div style={{ margin: '2rem 0' }}>
@@ -80,7 +80,7 @@ function App() {
           value={inputTarget}
           onChange={(e) => setInputTarget(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Enter a username or GitHub link"
+          placeholder="user1, user2 or github.com/username"
           style={{
             background: '#141414', border: '1px solid #00ff66', padding: '0.75rem',
             color: '#fff', width: '380px', marginRight: '1rem', fontFamily: 'monospace'

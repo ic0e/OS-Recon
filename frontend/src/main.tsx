@@ -8,6 +8,6 @@ createRoot(document.getElementById('root')!).render(
   <ScannerProvider>
     <StrictMode>
       <App />
-    </StrictMode>,
+    </StrictMode>
   </ScannerProvider>
 )
