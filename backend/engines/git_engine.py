@@ -100,10 +100,12 @@ async def fetch_repo_commits(username: str, repo_name: str):
             for item in raw_commits:
                 commit_info = item.get("commit", {})
                 author_info = commit_info.get("author", {})
+                email = author_info.get("email", "")
                 
                 parsed_commits.append({
                     "sha": item.get("sha", "")[:7], # Short commit hash
                     "author": author_info.get("name", "Unknown"),
+                    "email": email if "noreply.github.com" not in email else None,
                     "date": author_info.get("date", ""),
                     "message": commit_info.get("message", "No message provided.")
                 })

@@ -162,12 +162,60 @@ export function RepoTable({ repos = [] }: RepoTableProps) {
                                   )}
 
                                   {!isScanning && Array.isArray(commits) && commits.map((commit: any, cIdx: number) => (
-                                    <div key={cIdx} style={{ margin: '0.5rem 0', fontSize: '0.85rem', display: 'flex', gap: '1rem' }}>
-                                      <span style={{ color: '#00ff66' }}>
-                                        [{commit?.sha ? commit.sha.substring(0, 7) : 'no-sha'}]
-                                      </span>
-                                      <span style={{ color: '#aaa', minWidth: '120px' }}>{commit?.author || 'Unknown'}:</span>
-                                      <span style={{ color: '#fff' }}>{commit?.message || 'No message'}</span>
+                                    <div key={cIdx} style={{
+                                      margin: '2px 0',
+                                      padding: '10px 14px',
+                                      background: 'var(--color-background-primary, #111)',
+                                      border: '0.5px solid rgba(255,255,255,0.08)',
+                                      borderRadius: '6px',
+                                      display: 'flex',
+                                      flexDirection: 'column',
+                                      gap: '4px',
+                                    }}>
+                                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                                        <span style={{
+                                          fontFamily: 'monospace',
+                                          fontSize: '12px',
+                                          color: '#00cc55',
+                                          background: 'rgba(0,204,85,0.08)',
+                                          padding: '2px 7px',
+                                          borderRadius: '4px',
+                                        }}>
+                                          {commit?.sha ? commit.sha.substring(0, 7) : 'no-sha'}
+                                        </span>
+                                        <span style={{ fontSize: '13px', fontWeight: 500, color: '#fff' }}>
+                                          {commit?.author || 'Unknown'}
+                                        </span>
+                                        {commit?.email
+                                          ? (
+                                            <span style={{
+                                              fontSize: '12px',
+                                              fontFamily: 'monospace',
+                                              color: '#60a5fa',
+                                              background: 'rgba(96,165,250,0.1)',
+                                              padding: '1px 7px',
+                                              borderRadius: '4px',
+                                            }}>
+                                              {commit.email}
+                                            </span>
+                                          ) : (
+                                            <span style={{ fontSize: '12px', color: '#555', fontStyle: 'italic' }}>
+                                              no email exposed
+                                            </span>
+                                          )
+                                        }
+                                        <span style={{ fontSize: '12px', color: '#555', marginLeft: 'auto' }}>
+                                          {commit?.date ? new Date(commit.date).toLocaleString() : ''}
+                                        </span>
+                                      </div>
+                                      <div style={{
+                                        fontSize: '13px',
+                                        color: '#999',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                      }}>
+                                        {commit?.message || 'No message'}
+                                      </div>
                                     </div>
                                   ))}
                                 </div>
