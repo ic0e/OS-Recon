@@ -21,17 +21,16 @@ Results are split into prioritized risks and general logs - designed with struct
 - **Stealth Browser Orchestration:** Advanced deep-reconnaissance module (`nodriver`) that spawns concurrent, isolated headless Chrome instances to bypass anti-scraping walls.
 - **Deep Profile Telemetry Extraction:** Captures un-vetted metadata blocks including biography extracts, cross-referenced outbound links, and dynamic platform specific variables (followers, post counts, bios, etc.).
 - **FastAPI server backend:** Runs asynchronous tasks, used for fetching with httpx & curl_cffi. Collects data on a username(s).
-- **More filters for false positives:** lets a user know when the scanner was blocked from a website, allowing human verification to see if a profile exists.
+- **Analytics:** After deep prying, analyze the results. Show the user confidence scores, how much data the scanner pulled, etc.
 - **Automatic github deep scan:** Automated intelligence that uses GitHub's API to extract repository risks, parse metadata metrics, exposed emails, and audit commit history.
 
 ## TODO:
+- Implement data & AI analysis & custom data imports that goes along with that (to give the LLM more context if needed so it can analyze better)
 - Add more deep scraping features (video metadata for social media, etc.)
 - Improve on the scanner to yield less false positives.
-- Implement data & AI analysis & custom data imports that goes along with that (to give the LLM more context if needed so it can analyze better)
 
 ## FUTURE FEATURES TASKLIST:
 - LLM integration (analysis engine, NOT a chatbot): fully prompt engineered module that analyzes deep scan data and returns structured output rendered directly in the UI - bio pattern analysis, cross-platform connection mapping, risk flagging, etc.
-- Analytics depth: analyze and find connections between data, names, etc.
 - Deep source code scanner looking for secrets inside files.
 - Port to electron for easier running.
 
@@ -69,3 +68,6 @@ npm run dev
 ```
 
 Frontend runs on `http://localhost:5173`, backend on `http://localhost:8000`.
+
+## License
+This project is licensed under the GNU Affero General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
