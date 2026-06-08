@@ -6,6 +6,69 @@ interface AIAnalysisPanelProps {
   pryResults: any[] | null;
 }
 
+interface AIAnalysisViewerProps {
+  rawAnalysis: string;
+}
+
+function AIAnalysisViewer({ rawAnalysis }: AIAnalysisViewerProps) {
+  if (!rawAnalysis) return null;
+
+  const lines = rawAnalysis.split('\n');
+
+  return (
+    <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '0.5rem', fontFamily: 'monospace', fontSize: '0.8rem' }}>
+      {lines.map((line, index) => {
+        const trimmed = line.trim();
+
+        if (!trimmed) return <div key={index} style={{ height: '0.5rem' }} />;
+
+        if (trimmed.startsWith('**Phase') || trimmed.startsWith('Phase')) {
+          return (
+            <div key={index} style={{ paddingTop: '1rem', paddingBottom: '0.4rem', borderBottom: '1px dashed #222' }}>
+              <h3 style={{ margin: 0, color: '#00ff66', fontSize: '0.75rem', fontWeight: 'bold', letterSpacing: '0.05em' }}>
+                {trimmed.replace(/\*\*|\[!\]|\[\+\]|\[-\]/g, '').trim()}
+              </h3>
+            </div>
+          );
+        }
+
+        if (trimmed.startsWith('[!]')) {
+          return (
+            <div key={index} style={{ padding: '0.75rem', borderRadius: '2px', background: '#1a0d0d', border: '1px solid #ff3333', color: '#ff8888', lineHeight: '1.5' }}>
+              <span style={{ color: '#ff3333', fontWeight: 'bold', marginRight: '0.5rem' }}>[!]</span>
+              {trimmed.replace('[!]', '').trim()}
+            </div>
+          );
+        }
+
+        if (trimmed.startsWith('[+]')) {
+          return (
+            <div key={index} style={{ padding: '0.75rem', borderRadius: '2px', background: '#05140b', border: '1px solid #00aa44', color: '#e0e0e0', lineHeight: '1.5' }}>
+              <span style={{ color: '#00ff66', fontWeight: 'bold', marginRight: '0.5rem' }}>[+]</span>
+              {trimmed.replace('[+]', '').trim()}
+            </div>
+          );
+        }
+
+        if (trimmed.startsWith('[-]')) {
+          return (
+            <div key={index} style={{ padding: '0.25rem 0 0.25rem 0.75rem', borderLeft: '2px solid #444', color: '#a0a0a0', lineHeight: '1.5' }}>
+              <span style={{ color: '#888', marginRight: '0.5rem' }}>[-]</span>
+              {trimmed.replace('[-]', '').trim()}
+            </div>
+          );
+        }
+
+        return (
+          <div key={index} style={{ paddingLeft: '1.25rem', color: '#888', lineHeight: '1.5' }}>
+            {trimmed}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export function AIAnalysisPanel({ scanData, gitData, pryResults }: AIAnalysisPanelProps) {
   const [loading, setLoading] = useState(false);
   const [report, setReport] = useState<string | null>(null);
@@ -73,11 +136,11 @@ export function AIAnalysisPanel({ scanData, gitData, pryResults }: AIAnalysisPan
       )}
 
       {report && !loading && (
-        <div style={{ background: '#0a0a0a', border: '1px solid #222', borderLeft: '4px solid #00ff66', padding: '1.25rem', fontFamily: 'monospace', color: '#e0e0e0', fontSize: '0.8rem', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
-          <div style={{ color: '#00ff66', fontWeight: 'bold', marginBottom: '0.75rem', borderBottom: '1px dashed #222', paddingBottom: '0.4rem', fontSize: '0.7rem' }}>
-            AI ANALYSIS
+        <div style={{ background: '#0a0a0a', border: '1px solid #222', borderLeft: '4px solid #00ff66', padding: '1.25rem', fontFamily: 'monospace', color: '#e0e0e0', fontSize: '0.8rem', lineHeight: '1.6' }}>
+          <div style={{ color: '#00ff66', fontWeight: 'bold', marginBottom: '0.75rem', borderBottom: '1px dashed #222', paddingBottom: '0.4rem', fontSize: '0.7rem', letterSpacing: '0.05em' }}>
+            COGNITIVE THREAT INTELLIGENCE REPORT
           </div>
-          {report}
+          <AIAnalysisViewer rawAnalysis={report} />
         </div>
       )}
     </div>
