@@ -75,6 +75,27 @@ OS-RECON/
 
 Requires Python 3.10+ and Node.js 18+. Chrome must be installed for the stealth browser module.
 
+### Getting Started
+
+> **Non-developers who want to try this out:** OS-Recon runs locally and requires a few tools to set up.
+> There's no hosted or deployed version yet, this is early development. You'll need to run it
+> through a terminal or an IDE like VS Code. Follow the steps below carefully and
+> it should work out of the box.
+
+**Prerequisites:**
+- [Python 3.10+](https://www.python.org/downloads/)
+- [Node.js 18+](https://nodejs.org/)
+- [Google Chrome](https://www.google.com/chrome/) (required for the stealth browser module)
+- [Git](https://git-scm.com/downloads/) (to clone the repo)
+
+**Clone the repo:**
+```bash
+git clone https://github.com/ic0e/OS-Recon.git
+cd OS-Recon
+```
+
+Then follow the Backend and Frontend steps below.
+
 ### AI Analysis Activation (Optional)
 > The cognitive threat intelligence tab requires a Groq API token. If you choose not to use the AI analysis engine, the core passive scanners, GitHub parsing, and nodriver stealth orchestration layers will still function completely normally without it.
 
@@ -101,6 +122,9 @@ npm run dev
 ```
 
 Frontend runs on `http://localhost:5173`, backend on `http://localhost:8000`.
+
+## Contributing
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to help.
 
 ## License
 This project is licensed under the GNU Affero General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
