@@ -5,6 +5,7 @@ import { OverviewTab } from './components/OverviewTab';
 import { AnalyticsTab } from './components/AnalyticsTab';
 import { ScanProgress } from './components/ScanProgress';
 import { SocialOverview } from './components/SocialOverview';
+import { useScanner } from './context/ScannerContext';
 
 function App() {
   const [inputTarget, setInputTarget] = useState('');
@@ -16,6 +17,8 @@ function App() {
   const [showStandardList, setShowStandardList] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
 
+  const { setAiReport, setAiLoading, setAiError } = useScanner();
+
   const startRecon = async () => {
     if (!inputTarget) return;
     setIsScanning(true);
@@ -23,6 +26,9 @@ function App() {
     setGitData(null);
     setEngine(null);
     setScanError(null);
+    setAiReport(null);
+    setAiLoading(false);
+    setAiError(null);
 
     try {
       const response = await fetch('http://127.0.0.1:8000/api/scan', {
@@ -59,6 +65,9 @@ function App() {
     setEngine(null);
     setScanError(null);
     setActiveTab('overview');
+    setAiReport(null);
+    setAiLoading(false);
+    setAiError(null);
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

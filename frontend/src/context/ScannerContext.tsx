@@ -5,7 +5,7 @@ export interface SocialResult {
   url: string;
   category: string;
   username: string;
-  status: number | string; 
+  status: number | string;
 }
 
 interface ScannerContextType {
@@ -13,12 +13,22 @@ interface ScannerContextType {
   toggleProfile: (profile: SocialResult) => void;
   removeProfile: (username: string, site: string) => void;
   clearStage: () => void;
+  // AI ANALYSIS GLOBAL STATE
+  aiReport: string | null;
+  setAiReport: (report: string | null) => void;
+  aiLoading: boolean;
+  setAiLoading: (loading: boolean) => void;
+  aiError: string | null;
+  setAiError: (error: string | null) => void;
 }
 
 const ScannerContext = createContext<ScannerContextType | undefined>(undefined);
 
 export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [stagedProfiles, setStagedProfiles] = useState<Record<string, SocialResult>>({});
+  const [aiReport, setAiReport] = useState<string | null>(null);
+  const [aiLoading, setAiLoading] = useState<boolean>(false);
+  const [aiError, setAiError] = useState<string | null>(null);
 
   const toggleProfile = (profile: SocialResult) => {
     // uses the compositekey to have the PRY button unique across all usernames
@@ -47,7 +57,20 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const clearStage = () => setStagedProfiles({});
 
   return (
-    <ScannerContext.Provider value={{ stagedProfiles, toggleProfile, removeProfile, clearStage }}>
+    <ScannerContext.Provider
+      value={{
+        stagedProfiles,
+        toggleProfile,
+        removeProfile,
+        clearStage,
+        aiReport,
+        setAiReport,
+        aiLoading,
+        setAiLoading,
+        aiError,
+        setAiError
+      }}
+    >
       {children}
     </ScannerContext.Provider>
   );

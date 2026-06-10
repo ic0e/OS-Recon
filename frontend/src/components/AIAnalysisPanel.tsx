@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useScanner } from '../context/ScannerContext';
 
 interface AIAnalysisPanelProps {
   scanData: any;
@@ -70,9 +70,14 @@ function AIAnalysisViewer({ rawAnalysis }: AIAnalysisViewerProps) {
 }
 
 export function AIAnalysisPanel({ scanData, gitData, pryResults }: AIAnalysisPanelProps) {
-  const [loading, setLoading] = useState(false);
-  const [report, setReport] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    aiReport: report,
+    setAiReport: setReport,
+    aiLoading: loading,
+    setAiLoading: setLoading,
+    aiError: error,
+    setAiError: setError
+  } = useScanner();
 
   const runEngine = async () => {
     setLoading(true);
