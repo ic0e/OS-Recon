@@ -47,14 +47,8 @@ All harvested telemetry is piped through a prompt-engineered Groq pipeline that 
 - **Automated AI Threat Cognition Engine:** Prompt-engineered pipeline powered by Groq (`llama-3.1-8b-instant`) that filters out scraper boilerplate noise and converts raw telemetry dumps into a structured, defensive terminal risk evaluation report.
 - **Automatic GitHub Deep Scan:** Intelligence module utilizing the GitHub API to parse repository risks, extract exposed metadata, and flag hidden email addresses in commit histories.
 
-## TODO:
-- Implement custom metadata/data overrides and manual imports to enrich target data before executing cognitive completions.
-- Add more deep scraping features (video metadata for social media, etc.)
-- Improve on the scanner to yield less false positives.
-
-## FUTURE FEATURES TASKLIST:
-- Deep source code scanner looking for secrets inside files.
-- Port to electron for easier running.
+## ROADMAP
+Looking to see what's planned next? Check out [issues](https://github.com/ic0e/OS-Recon/issues), the TODOs (bugs to fix & features to add) are tracked there.
 
 ## Current Project Layout
 ```
