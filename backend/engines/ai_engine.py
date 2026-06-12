@@ -9,7 +9,7 @@ class AIEngine:
     def __init__(self):
         self.api_key = os.environ.get("GROQ_API_KEY")
         if not self.api_key:
-            raise RuntimeError("GROQ_API_KEY is missing from environment variables.")
+            raise RuntimeError("GROQ_API_KEY is not set. AI analysis is optional — see README for setup.")
         
         self.client = OpenAI(
             base_url="https://api.groq.com/openai/v1",
@@ -115,4 +115,10 @@ class AIEngine:
         except Exception as e:
             return f"[AI Engine Error]: Failed to execute pipeline. Details: {str(e)}"
 
-ai_engine = AIEngine()
+ai_engine = None
+
+def get_ai_engine():
+    global ai_engine
+    if ai_engine is None:
+        ai_engine = AIEngine()
+    return ai_engine

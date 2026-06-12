@@ -6,7 +6,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Any, Optional, List
-from engines.ai_engine import ai_engine
+from engines.ai_engine import get_ai_engine
 
 
 # Resilient Windows subprocess execution configuration for asyncio
@@ -208,15 +208,19 @@ class AnalysisRequest(BaseModel):
     github: Optional[Any] = None
     deepPry: Optional[List[Any]] = None
 
+
 @app.post("/api/analyze")
 async def handle_ai_analysis(request: AnalysisRequest):
     try:
+        engine = get_ai_engine()
         payload_data = {
             "social": request.social,
             "github": request.github,
             "deepPry": request.deepPry
         }
-        report = ai_engine.generate_report(payload_data)
+        report = engine.generate_report(payload_data)
         return {"analysis": report}
+    except RuntimeError as e:
+        raise HTTPException(status_code=503, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
