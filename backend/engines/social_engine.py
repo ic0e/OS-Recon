@@ -1,6 +1,7 @@
-import httpx
 import asyncio
 import re
+
+import httpx
 from curl_cffi.requests import AsyncSession
 
 # ──────────────────────────────────────────────────────────
@@ -30,7 +31,7 @@ SITES = {
     "X (Twitter)": {
         "url": "https://x.com/{}",
         "errorType": "message",
-        "errorMsg": "User \"",
+        "errorMsg": 'User "',
         "category": "social",
     },
     "Instagram": {
@@ -254,14 +255,31 @@ SITES = {
 # ──────────────────────────────────────────────────────────
 
 PREFIXES = {"the", "real", "iam", "im", "its", "ascended"}
-SUFFIXES = {"dev", "code", "coder", "bot", "git", "hub", "web", "app", "ice", "cat", "dog", "king", "lord", "exe"}
+SUFFIXES = {
+    "dev",
+    "code",
+    "coder",
+    "bot",
+    "git",
+    "hub",
+    "web",
+    "app",
+    "ice",
+    "cat",
+    "dog",
+    "king",
+    "lord",
+    "exe",
+}
+
 
 def split_camel_case(username: str) -> tuple[str, str] | None:
-    if re.search(r'[a-z][A-Z]', username):
-        parts = re.findall(r'[A-Z]?[a-z]+|[A-Z]+(?=[A-Z][a-z]|\b)', username)
+    if re.search(r"[a-z][A-Z]", username):
+        parts = re.findall(r"[A-Z]?[a-z]+|[A-Z]+(?=[A-Z][a-z]|\b)", username)
         if len(parts) >= 2:
             return parts[0].lower(), "".join(parts[1:]).lower()
     return None
+
 
 def find_smart_split(username: str) -> tuple[str, str] | None:
     camel_split = split_camel_case(username)
@@ -284,6 +302,7 @@ def find_smart_split(username: str) -> tuple[str, str] | None:
             best_score = score
             best_split = (left, right)
     return best_split
+
 
 def generate_username_variations(base_username: str) -> list[str]:
     base = base_username.strip().lower()
@@ -316,11 +335,12 @@ def generate_username_variations(base_username: str) -> list[str]:
             unique_variations.append(var)
             if len(unique_variations) >= 3:
                 break
-                
+
     return [base] + unique_variations
 
+
 async def _check_site(
-    client: httpx.AsyncSession,
+    client: httpx.AsyncClient,
     site_name: str,
     site_cfg: dict,
     username: str,
@@ -332,25 +352,25 @@ async def _check_site(
     async with semaphore:
         try:
             resp = await client.get(url, timeout=12, allow_redirects=True)
-            
+
             is_blocked_status = resp.status_code in [403, 429]
-            
+
             body_lower = resp.text.lower()
             is_blocked_text = (
-                "cloudflare" in body_lower or 
-                "sucuri" in body_lower or
-                "Before you continue" in body_lower
+                "cloudflare" in body_lower
+                or "sucuri" in body_lower
+                or "Before you continue" in body_lower
             )
-            
+
             if is_blocked_status or is_blocked_text:
                 return {
                     "site": site_name,
                     "url": site_cfg["url"].format(username).replace("/about.json", ""),
                     "category": site_cfg.get("category", "other"),
-                    "status": "Blocked", # flags the website as blocked
-                    "username": username
+                    "status": "Blocked",  # flags the website as blocked
+                    "username": username,
                 }
-            
+
             exists = False
 
             if error_type == "status_code":
@@ -379,33 +399,36 @@ async def _check_site(
                     "url": site_cfg["url"].format(username).replace("/about.json", ""),
                     "category": site_cfg.get("category", "other"),
                     "status": "Found",
-                    "username": username
+                    "username": username,
                 }
-                
+
         except (httpx.ConnectTimeout, httpx.ReadTimeout):
             pass
         except Exception:
             pass
-            
+
     return None
 
+
 async def scan_username(username: str) -> dict:
-    
-    if ',' in username:
-        variations = [u.strip().lstrip("@") for u in username.split(',') if u.strip()]
+
+    if "," in username:
+        variations = [u.strip().lstrip("@") for u in username.split(",") if u.strip()]
 
         if not variations:
             return {"error": "No valid usernames provided."}
-        
+
         # Validate format for each username
         for var in variations:
             if not re.match(r"^[a-zA-Z0-9._-]{1,40}$", var):
                 return {"error": f"Invalid username format: '{var}'"}
     else:
         cleaned_username = username.strip().lstrip("@")
-        if not cleaned_username or not re.match(r"^[a-zA-Z0-9._-]{1,40}$", cleaned_username):
+        if not cleaned_username or not re.match(
+            r"^[a-zA-Z0-9._-]{1,40}$", cleaned_username
+        ):
             return {"error": "Invalid username format."}
-        
+
         # Generate variations if it's a single input
         variations = generate_username_variations(cleaned_username)
 
@@ -435,9 +458,7 @@ async def scan_username(username: str) -> dict:
             categories[cat] = []
         categories[cat].append(r)
 
-    github_usernames = [
-        r["username"] for r in results if r["site"] == "GitHub"
-    ]
+    github_usernames = [r["username"] for r in results if r["site"] == "GitHub"]
 
     return {
         "username": username,
