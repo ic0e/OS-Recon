@@ -182,8 +182,6 @@ export function AIAnalysisPanel({
   };
 
   const downloadReport = () => {
-    if (!report) return;
-
     // extract and map data sources safely
     const scanMeta = scanData || {};
     const gitMeta = gitData || {};
@@ -202,13 +200,15 @@ export function AIAnalysisPanel({
     txtContent += `==================================================\n\n`;
 
     // AI OUTPUT
-    txtContent += `[+] AI INTEL & TARGET PROFILE\n`;
-    txtContent += `--------------------------------------------------\n`;
-    txtContent += `Target Name : ${profileMeta.display_name || "Unknown"}\n`;
-    txtContent += `Bio         : ${profileMeta.bio || "No bio available."}\n`;
-    txtContent += `Followers   : ${profileMeta.platform_specific?.followers || 0}\n`;
-    txtContent += `Total Repos : ${profileMeta.platform_specific?.repositories || 0}\n`;
-    txtContent += `Exposed E-mail(s): ${emails.join(", ") || "None detected."}\n\n`;
+    if (report) {
+      txtContent += `[+] AI INTEL & TARGET PROFILE\n`;
+      txtContent += `--------------------------------------------------\n`;
+      txtContent += `Target Name : ${profileMeta.display_name || "Unknown"}\n`;
+      txtContent += `Bio         : ${profileMeta.bio || "No bio available."}\n`;
+      txtContent += `Followers   : ${profileMeta.platform_specific?.followers || 0}\n`;
+      txtContent += `Total Repos : ${profileMeta.platform_specific?.repositories || 0}\n`;
+      txtContent += `Exposed E-mail(s): ${emails.join(", ") || "None detected."}\n\n`;
+    }
 
     // REPOS
     txtContent += `[+] IDENTIFIED SOURCE REPOSITORIES (${repos.length})\n`;
@@ -279,10 +279,11 @@ export function AIAnalysisPanel({
           {loading ? "PROCESSING..." : "EXECUTE AI ANALYSIS"}
         </button>
 
-        {report && !loading && (
+        {!loading && (
           <button
             onClick={downloadReport}
             disabled={loading}
+            title="Export AI analysis report as a CSV file. (AI analysis not needed for this export.)"
             style={{
               background: loading ? "#222" : "#00ff66",
               color: loading ? "#555" : "#000",
