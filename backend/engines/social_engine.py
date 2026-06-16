@@ -408,7 +408,7 @@ async def _check_site(
     return None
 
 
-async def scan_username(username: str) -> dict:
+async def scan_username(username: str, include_variations: bool = True) -> dict:
 
     if "," in username:
         variations = [u.strip().lstrip("@") for u in username.split(",") if u.strip()]
@@ -419,7 +419,8 @@ async def scan_username(username: str) -> dict:
         for var in variations:
             if not re.match(r"^[a-zA-Z0-9._-]{1,40}$", var):
                 return {"error": f"Invalid username format: '{var}'"}
-    else:
+
+    elif include_variations:  #  When TRUE, generate multiple permutations
         cleaned_username = username.strip().lstrip("@")
         if not cleaned_username or not re.match(
             r"^[a-zA-Z0-9._-]{1,40}$", cleaned_username
@@ -427,6 +428,15 @@ async def scan_username(username: str) -> dict:
             return {"error": "Invalid username format."}
 
         variations = generate_username_variations(cleaned_username)
+
+    else:  #  When FALSE, stick strictly to the exact match
+        cleaned_username = username.strip().lstrip("@")
+        if not cleaned_username or not re.match(
+            r"^[a-zA-Z0-9._-]{1,40}$", cleaned_username
+        ):
+            return {"error": "Invalid username format."}
+
+        variations = [cleaned_username]
 
     semaphore = asyncio.Semaphore(15)
 

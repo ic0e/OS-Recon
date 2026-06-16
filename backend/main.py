@@ -38,6 +38,7 @@ app.add_middleware(
 
 class ScanRequest(BaseModel):
     target: str
+    include_variations: bool = False
 
 
 class CommitRequest(BaseModel):
@@ -78,7 +79,9 @@ async def handle_scan(request: ScanRequest):
         if "error" in git_data:
             raise HTTPException(status_code=400, detail=git_data["error"])
 
-        social_result = await scan_username(git_data["username"])
+        social_result = await scan_username(
+            git_data["username"], include_variations=request.include_variations
+        )
 
         owner_name = git_data.get("username")
         all_repos = git_data.get("interesting", []) + git_data.get("standard", [])
@@ -100,7 +103,9 @@ async def handle_scan(request: ScanRequest):
         }
 
     else:
-        social_result = await scan_username(input_data)
+        social_result = await scan_username(
+            input_data, include_variations=request.include_variations
+        )
 
         if "error" in social_result:
             raise HTTPException(status_code=400, detail=social_result["error"])

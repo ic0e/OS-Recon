@@ -1,21 +1,22 @@
-import { useState } from 'react';
-import { TabNavigation } from './components/TabNavigation';
-import { TargetProfile } from './components/TargetProfile';
-import { OverviewTab } from './components/OverviewTab';
-import { AnalyticsTab } from './components/AnalyticsTab';
-import { ScanProgress } from './components/ScanProgress';
-import { SocialOverview } from './components/SocialOverview';
-import { useScanner } from './context/ScannerContext';
+import { useState } from "react";
+import { TabNavigation } from "./components/TabNavigation";
+import { TargetProfile } from "./components/TargetProfile";
+import { OverviewTab } from "./components/OverviewTab";
+import { AnalyticsTab } from "./components/AnalyticsTab";
+import { ScanProgress } from "./components/ScanProgress";
+import { SocialOverview } from "./components/SocialOverview";
+import { useScanner } from "./context/ScannerContext";
 
 function App() {
-  const [inputTarget, setInputTarget] = useState('');
+  const [inputTarget, setInputTarget] = useState("");
   const [scanData, setScanData] = useState<any>(null);
   const [engine, setEngine] = useState<string | null>(null);
   const [gitData, setGitData] = useState<any>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [scanError, setScanError] = useState<string | null>(null);
   const [showStandardList, setShowStandardList] = useState(false);
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState("overview");
+  const [variationsCheck, setVariationsCheck] = useState(false);
 
   const { setAiReport, setAiLoading, setAiError } = useScanner();
 
@@ -31,15 +32,18 @@ function App() {
     setAiError(null);
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/scan', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ target: inputTarget }),
+      const response = await fetch("http://127.0.0.1:8000/api/scan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          target: inputTarget,
+          include_variations: variationsCheck,
+        }),
       });
 
       if (!response.ok) {
         const err = await response.json();
-        setScanError(err.detail || 'Scan failed.');
+        setScanError(err.detail || "Scan failed.");
         return;
       }
 
@@ -53,7 +57,9 @@ function App() {
       }
     } catch (error) {
       console.error("Connection error", error);
-      setScanError("Could not connect to the backend. Make sure the server is running.");
+      setScanError(
+        "Could not connect to the backend. Make sure the server is running.",
+      );
     } finally {
       setIsScanning(false);
     }
@@ -64,26 +70,41 @@ function App() {
     setGitData(null);
     setEngine(null);
     setScanError(null);
-    setActiveTab('overview');
+    setActiveTab("overview");
     setAiReport(null);
     setAiLoading(false);
     setAiError(null);
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !isScanning) {
+    if (e.key === "Enter" && !isScanning) {
       startRecon();
     }
   };
 
   return (
-    <div style={{ padding: '2.5rem', fontFamily: 'monospace', background: '#0d0d0d', color: '#00ff66', minHeight: '100vh' }}>
+    <div
+      style={{
+        padding: "2.5rem",
+        fontFamily: "monospace",
+        background: "#0d0d0d",
+        color: "#00ff66",
+        minHeight: "100vh",
+      }}
+    >
       <h2>OS-Recon</h2>
-      <p style={{ color: '#888', marginTop: '-0.5rem', marginBottom: '1.5rem', fontSize: '0.85rem' }}>
+      <p
+        style={{
+          color: "#888",
+          marginTop: "-0.5rem",
+          marginBottom: "1.5rem",
+          fontSize: "0.85rem",
+        }}
+      >
         Open source intelligence username & GitHub scanner
       </p>
 
-      <div style={{ margin: '2rem 0' }}>
+      <div style={{ margin: "2rem 0" }}>
         <input
           type="text"
           value={inputTarget}
@@ -91,32 +112,100 @@ function App() {
           onKeyDown={handleKeyDown}
           placeholder="user1, user2 or github.com/username"
           style={{
-            background: '#141414', border: '1px solid #00ff66', padding: '0.75rem',
-            color: '#fff', width: '380px', marginRight: '1rem', fontFamily: 'monospace'
+            background: "#141414",
+            border: "1px solid #00ff66",
+            padding: "0.75rem",
+            color: "#fff",
+            width: "380px",
+            marginRight: "1rem",
+            fontFamily: "monospace",
           }}
         />
         <button
           onClick={startRecon}
           style={{
-            background: '#00ff66', color: '#000', border: 'none', padding: '0.75rem 1.75rem',
-            cursor: 'pointer', fontWeight: 'bold', fontFamily: 'monospace'
+            background: "#00ff66",
+            color: "#000",
+            border: "none",
+            padding: "0.75rem 1.75rem",
+            cursor: "pointer",
+            fontWeight: "bold",
+            fontFamily: "monospace",
           }}
           disabled={isScanning}
         >
-          {isScanning ? 'Scanning...' : 'Scan'}
+          {isScanning ? "Scanning..." : "Scan"}
         </button>
+
         {scanData && (
           <button
             onClick={clearLog}
             disabled={isScanning}
             style={{
-              background: 'transparent', color: '#888', border: '1px solid #333', padding: '0.75rem 1.75rem',
-              cursor: 'pointer', fontFamily: 'monospace', marginLeft: '0.5rem'
+              background: "transparent",
+              color: "#888",
+              border: "1px solid #333",
+              padding: "0.75rem 1.75rem",
+              cursor: "pointer",
+              fontFamily: "monospace",
+              marginLeft: "0.5rem",
             }}
           >
             Clear
           </button>
         )}
+        <div
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            marginLeft: "1rem",
+            boxSizing: "border-box",
+            verticalAlign: "middle",
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setVariationsCheck(!variationsCheck)}
+            style={{
+              width: "1.25rem",
+              height: "1.25rem",
+              background: variationsCheck ? "#00ff66" : "transparent",
+              border: `1px solid ${variationsCheck ? "#00ff66" : "#ffffff"}`,
+              cursor: "pointer",
+              padding: 0,
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxSizing: "border-box",
+              flexShrink: 0,
+            }}
+          >
+            {variationsCheck && (
+              <span
+                style={{
+                  color: "#000000",
+                  fontWeight: "bold",
+                  fontSize: "0.85rem",
+                  lineHeight: 1,
+                  display: "block",
+                }}
+              >
+                ✓
+              </span>
+            )}
+          </button>
+          <span
+            style={{
+              color: "#ffffff",
+              marginLeft: "0.5rem",
+              fontSize: "0.85rem",
+              userSelect: "none",
+              lineHeight: "1.25rem",
+            }}
+          >
+            Include variations
+          </span>
+        </div>
       </div>
 
       {/* Scan progress animation */}
@@ -124,26 +213,46 @@ function App() {
 
       {/* Error display */}
       {scanError && (
-        <div style={{
-          background: '#1a1111', border: '1px solid #ff333360', padding: '1rem',
-          marginTop: '1.5rem', fontFamily: 'monospace', color: '#ff6666', fontSize: '0.9rem',
-        }}>
+        <div
+          style={{
+            background: "#1a1111",
+            border: "1px solid #ff333360",
+            padding: "1rem",
+            marginTop: "1.5rem",
+            fontFamily: "monospace",
+            color: "#ff6666",
+            fontSize: "0.9rem",
+          }}
+        >
           {scanError}
         </div>
       )}
 
-      {scanData && engine === 'social' && (
-        <div style={{ marginTop: '2rem' }}>
+      {scanData && engine === "social" && (
+        <div style={{ marginTop: "2rem" }}>
           {/* Social scan header */}
-          <div style={{
-            background: '#141414', padding: '1rem', borderLeft: '4px solid #00ff66', marginBottom: '2rem',
-          }}>
-            <h3 style={{ margin: 0, color: '#fff' }}>
+          <div
+            style={{
+              background: "#141414",
+              padding: "1rem",
+              borderLeft: "4px solid #00ff66",
+              marginBottom: "2rem",
+            }}
+          >
+            <h3 style={{ margin: 0, color: "#fff" }}>
               Username: {scanData.username}
             </h3>
-            <p style={{ margin: '0.5rem 0 0 0', color: '#aaa', fontSize: '0.9rem' }}>
-              Scanned {scanData.total_checked} platforms - found {scanData.total_found} matching profiles
-              {gitData && ' - GitHub account detected, repository data included below'}
+            <p
+              style={{
+                margin: "0.5rem 0 0 0",
+                color: "#aaa",
+                fontSize: "0.9rem",
+              }}
+            >
+              Scanned {scanData.total_checked} platforms - found{" "}
+              {scanData.total_found} matching profiles
+              {gitData &&
+                " - GitHub account detected, repository data included below"}
             </p>
           </div>
 
