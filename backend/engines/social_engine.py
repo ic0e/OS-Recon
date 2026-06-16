@@ -30,7 +30,7 @@ SITES = {
     "X (Twitter)": {
         "url": "https://x.com/{}",
         "errorType": "message",
-        "errorMsg": 'User "',
+        "errorMsg": "This account doesn't exist",
         "category": "social",
     },
     "Instagram": {
@@ -359,6 +359,7 @@ async def _check_site(
                 "cloudflare" in body_lower
                 or "sucuri" in body_lower
                 or "before you continue" in body_lower
+                or "rate limit" in body_lower
             )
 
             if is_blocked_status or is_blocked_text:
