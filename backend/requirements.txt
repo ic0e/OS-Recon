@@ -4,3 +4,4 @@ httpx
 curl_cffi
 pydantic
 nodriver
+openai>=2.43.0

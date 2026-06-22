@@ -109,6 +109,7 @@ GROQ_API_KEY=gsk_your_high_security_token_here
 ```bash
 cd backend
 pip install -r requirements.txt
+# or if you have uv: uv sync
 cd ..
 npm install
 ```
