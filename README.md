@@ -1,5 +1,5 @@
-# OS-RECON • [![License: AGPL v3](https://img.shields.io/badge/license-AGPL_3.0-blue.svg)](https://www.gnu.org/licenses/agpl-3.0.html) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com) [![Issues Welcome](https://img.shields.io/badge/issues-welcome-brightgreen.svg)](https://github.com/your-username/OS-Recon/issues) [![Maintenance](https://img.shields.io/badge/maintained-yes-brightgreen.svg)](https://github.com/ic0e/OS-Recon/graphs/commit-activity)
-> A local reconnaissance dashboard for digital footprint analysis. Unlike standard username checkers, OS-Recon combines passive social scanning with active deep-profile extraction - spawning isolated stealth browser instances using `nodriver` to bypass anti-scraping walls and pull raw metadata that static scanners can't reach.
+# OS-RECON • [![Python](https://img.shields.io/badge/Python-3.14-3776ab?style=flat-square&logo=python&logoColor=white)](https://www.python.org/) [![React](https://img.shields.io/badge/React-19-61dafb?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
+A local reconnaissance dashboard for digital footprint analysis. Unlike standard username checkers, OS-Recon combines passive social scanning with active deep-profile extraction - spawning isolated stealth browser instances using nodriver to bypass anti scraping walls and pull raw metadata that static scanners can't reach.
 
 [![Python](https://img.shields.io/badge/Python-3.14-3776ab?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.136-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
@@ -31,26 +31,33 @@ Select your targets and launch the nodriver drones. Isolated stealth Chrome inst
 
 ---
 
-### AI Analytics
-All harvested telemetry is piped through a prompt-engineered Groq pipeline that strips scraper noise and produces a structured, prioritized risk evaluation report. Designed to detect patterns, username consistency and more. (WIP)
+### Analytics
+All harvested data is put through analytics. You can get basic statistics and if set up, an AI summary that gets the key points from the data.
 
 <img width="800" height="384" alt="analytics" src="https://github.com/user-attachments/assets/d77ef5b2-7f7e-4b8a-9f87-13e20a379412" />
 
 ---
 
-## FEATURES ATM: (readme last updated on June 8, 2026)
-- **DeepPry Launchpad UI:** Profile view tracking target accounts with automatic cross-origin media fallback protocols.
-- **Stealth Browser Orchestration:** Advanced deep-recon module (`nodriver`) spawning concurrent, isolated headless Chrome instances to bypass anti-scraping walls.
-- **Deep Profile Telemetry Extraction:** Captures metadata blocks including bio extracts, cross-referenced outbound links, and dynamic platform-specific variables.
-- **FastAPI Backend Server:** Handles asynchronous tasks, fetching via `httpx` & `curl_cffi` to collect target registry metrics concurrently.
-- **Dual-Engine Analytics Tab:** Interface sub-tab selector that separates raw telemetry calculations from synthesized intelligence platforms without state loss.
-- **Automated AI Threat Cognition Engine:** Prompt-engineered pipeline powered by Groq (`llama-3.1-8b-instant`) that filters out scraper boilerplate noise and converts raw telemetry dumps into a structured, defensive terminal risk evaluation report.
-- **Automatic GitHub Deep Scan:** Intelligence module utilizing the GitHub API to parse repository risks, extract exposed metadata, and flag hidden email addresses in commit histories.
+## FEATURES ATM
+- **DeepPry UI:**
+Track target accounts in a clean dashboard. Includes auto fallback protocols to load media across different domains without CORS blocking.
+- **Stealth Browser:**
+Uses nodriver to spin up concurrent, isolated headless Chrome instances to not get blocked by cloudflare or other firewalls.
+- **Profile Scraping:**
+Pulls bios, links, and dynamic page variables from targets.
+- **FastAPI Backend:**
+Async backend using httpx and curl_cffi to grab registry metrics concurrently.
+- **Analytics Tab (OPTIONAL API):** 
+Toggle between raw data and AI analysis. Keeps tab state so you don't lose your place when switching views.
+- **LLM Threat Analysis:**
+Sends raw scraped dumps to Groq (`llama-3.1-8b-instant`) to strip out the important info from the messy data gathered.
+- **GitHub Scanner:**
+Hits the GitHub API to scan repos, extract metadata, and dig up hidden emails from commit histories.
 
 ## ROADMAP
-Looking to see what's planned next? Check out [issues](https://github.com/ic0e/OS-Recon/issues), the TODOs (bugs to fix & features to add) are tracked there.
+Check out [issues](https://github.com/ic0e/OS-Recon/issues), the future features are mapped there.
 
-## Current Project Layout
+## Current Project Structure
 ```
 OS-RECON/
 ├── backend/                    # The backend server folder, handles scraping & processing.
@@ -67,20 +74,24 @@ OS-RECON/
 ## How to Run
 > **Disclaimer: This tool is developed strictly for educational, security auditing, and authorized open-source intelligence research. The developer assumes no liability for misuse or violations of third-party terms of service.**
 
-> **⚠️ The backend server is designed for local use only. Never expose it to a public network or the internet.**
+**⚠️⚠️ NEVER RUN IN A PUBLIC NETWORK YOU DON'T TRUST. THIS TOOL IS FOR LOCAL USE ONLY. ⚠️⚠️**
 
-Requires Python 3.10+ and Node.js 18+. Chrome must be installed for the stealth browser module.
+**Requirements (links below in prerequisites section):**
+- Python 3.10+ (preferably 3.14, or the newest availalable version)
+- All libraries in `requirements.txt`
+- Node.js 18+.
+- Chrome (for the stealth browser module)
 
 ### Getting Started
 
-> **Non-developers who want to try this out:** OS-Recon runs locally and requires a few tools to set up.
-> There's no hosted or deployed version yet, this is early development. You'll need to run it
-> through a terminal or an IDE like VS Code. Follow the steps below carefully and
-> it should work out of the box.
+**Non developers who want to try this out:** OS-Recon runs locally and requires a few tools to set up.
+There's no hosted or deployed version yet, this is early development. You'll need to run it
+through a terminal or an IDE like VS Code. Follow the steps below carefully and
+it should work out of the box.
 
 **Prerequisites:**
-- [Python 3.10+](https://www.python.org/downloads/)
-- [Node.js 18+](https://nodejs.org/)
+- [Python - newest version](https://www.python.org/downloads/)
+- [Node.js](https://nodejs.org/)
 - [Google Chrome](https://www.google.com/chrome/) (required for the stealth browser module)
 - [Git](https://git-scm.com/downloads/) (to clone the repo)
 
@@ -92,18 +103,19 @@ cd OS-Recon
 
 Then follow the Backend and Frontend steps below.
 
-### AI Analysis Activation (Optional)
-> The cognitive threat intelligence tab requires a Groq API token. If you choose not to use the AI analysis engine, the core passive scanners, GitHub parsing, and nodriver stealth orchestration layers will still function completely normally without it.
+### AI Analysis Setup (Optional)
+The AI summary tab requires a Groq API token. If you choose not to use the AI analysis engine, the application will function fully without it. 
+If you want a fast way to summarize the data and get basic conclusions/connections, it's recommended to get an API token.
 
 1. Head to the Groq Console.
 2. Generate a new API key under the API Keys management dashboard.
 3. Create a .env file in the root directory and append your key:
 
 ```env
-GROQ_API_KEY=gsk_your_high_security_token_here
+GROQ_API_KEY=gsk_your_token_here
 ```
 
-> To start the project you need to run the Backend and the Frontend through the root folder.
+*To start the project you need to run the Backend and the Frontend through the root folder.*
 
 ### Setup & Package installation
 ```bash
@@ -114,12 +126,12 @@ cd ..
 npm install
 ```
 
-### One command startup (root folder)
+### Startup
 ```bash
 npm start
 ```
 
-### Manual startup (separate terminals)
+### Manual startup (separate terminals, recommended for development when changing stuff)
 
 **Backend**
 ```bash
