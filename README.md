@@ -9,11 +9,11 @@ A local reconnaissance dashboard for digital footprint analysis. Unlike standard
 [![HTTPX](https://img.shields.io/badge/HTTPX-Async_HTTP-1f425f?style=flat-square&logo=target&logoColor=white)](https://www.python-httpx.org/)
 [![curl-cffi](https://img.shields.io/badge/curl--cffi-Impersonate_TLS-064a6b?style=flat-square&logo=curl&logoColor=white)](https://github.com/lexiforest/curl_cffi)
 
-Built around three engines: a fast async social scanner, a stealth browser orchestration layer (`nodriver`), and a GitHub intelligence module that audits repositories, parses commit history, and extracts developer metadata automatically.
+Built around three engines: a fast async social scanner, a stealth browser orchestration layer (using `nodriver`), and a GitHub intelligence module that audits repositories, parses commit history, and extracts developer metadata automatically.
 
 Results are split into prioritized risks and general logs - designed with structured data output in mind for downstream analysis.
 
-> !! Early MVP: expect bugs and unfinished modules.
+> !! Early beta: expect bugs and unfinished modules.
 
 ## DEMO
 
@@ -130,8 +130,9 @@ npm install
 ```bash
 npm start
 ```
+The web app runs on `http://localhost:5173`.
 
-### Manual startup (separate terminals, recommended for development when changing stuff)
+### Manual startup (separate terminals, recommended for development when making changes)
 
 **Backend**
 ```bash
