@@ -6,7 +6,6 @@ from engines.social_engine import (
     _check_site,
     generate_username_variations,
     scan_username,
-    split_camel_case,
 )
 
 def test_generate_username_variations():
@@ -44,3 +43,24 @@ async def test_check_site_found_via_status_code():
     assert result is not None
     assert result["status"] == "Found"
     assert result["url"] == "https://github.com/testuser"
+
+@pytest.mark.asyncio
+async def test_check_site_blocked_by_cloudflare():
+    mock_client = AsyncMock()
+    mock_response = AsyncMock()
+    
+    mock_response.status_code = 403
+    mock_response.text = "Attention Required! | Cloudflare"
+    mock_client.get.return_value = mock_response
+
+    site_cfg = {
+        "url": "https://example.com/{}",
+        "errorType": "status_code",
+        "category": "social",
+    }
+
+    semaphore = AsyncMock()
+    result = await _check_site(mock_client, "Example", site_cfg, "testuser", semaphore)
+    
+    assert result is not None
+    assert result["status"] == "Blocked"
