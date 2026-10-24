@@ -247,6 +247,32 @@ SITES = {
         "errorType": "status_code",
         "category": "media",
     },
+    "Bugcrowd": {
+        "url": "https://bugcrowd.com/{}",
+        "errorType": "status_code",
+        "category": "security",
+    },
+    "Hugging Face": {
+        "url": "https://huggingface.co/{}",
+        "errorType": "status_code",
+        "category": "development",
+    },
+    "Hacker News": {
+        "url": "https://news.ycombinator.com/user?id={}",
+        "errorType": "message",
+        "errorMsg": "No such user.",
+        "category": "social",
+    },
+    "Sketchfab": {
+        "url": "https://sketchfab.com/{}",
+        "errorType": "status_code",
+        "category": "design",
+    },
+    "Packagist": {
+        "url": "https://packagist.org/users/{}/",
+        "errorType": "status_code",
+        "category": "development",
+    },
 }
 
 # ──────────────────────────────────────────────────────────
