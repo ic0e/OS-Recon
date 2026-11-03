@@ -1,5 +1,6 @@
 import asyncio
 import json
+import logging
 import sys
 from typing import Any, List, Optional
 
@@ -7,7 +8,22 @@ from engines.ai_engine import get_ai_engine
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from utils.cache import (
+    cache_result,
+    github_commits_cache,
+    github_repos_cache,
+    make_github_commits_key,
+    make_github_repos_key,
+    make_social_key,
+    social_cache,
+)
 from utils.security import is_safe_url
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(name)s] %(levelname)s: %(message)s",
+    datefmt="%H:%M:%S",
+)
 
 # Resilient Windows subprocess execution configuration for asyncio
 if sys.platform == "win32":
@@ -74,13 +90,22 @@ async def handle_scan(request: ScanRequest):
         raise HTTPException(status_code=400, detail="Target cannot be empty.")
 
     if _is_github_input(input_data):
-        git_data: dict | None = await analyze_github_target(input_data)
+        git_data: dict | None = await cache_result(
+            github_repos_cache,
+            make_github_repos_key(input_data),
+            analyze_github_target,
+            input_data,
+        )
 
         if "error" in git_data:
             raise HTTPException(status_code=400, detail=git_data["error"])
 
-        social_result = await scan_username(
-            git_data["username"], include_variations=request.include_variations
+        social_result = await cache_result(
+            social_cache,
+            make_social_key(git_data["username"], request.include_variations),
+            scan_username,
+            git_data["username"],
+            include_variations=request.include_variations,
         )
 
         owner_name = git_data.get("username", "")
@@ -103,8 +128,12 @@ async def handle_scan(request: ScanRequest):
         }
 
     else:
-        social_result = await scan_username(
-            input_data, include_variations=request.include_variations
+        social_result = await cache_result(
+            social_cache,
+            make_social_key(input_data, request.include_variations),
+            scan_username,
+            input_data,
+            include_variations=request.include_variations,
         )
 
         if "error" in social_result:
@@ -121,7 +150,16 @@ async def handle_scan(request: ScanRequest):
         git_data = None
 
         if github_targets:
-            git_tasks = [analyze_github_target(user) for user in github_targets if user]
+            git_tasks = [
+                cache_result(
+                    github_repos_cache,
+                    make_github_repos_key(user),
+                    analyze_github_target,
+                    user,
+                )
+                for user in github_targets
+                if user
+            ]
             git_results = await asyncio.gather(*git_tasks)
 
             aggregated_interesting = []
@@ -190,7 +228,13 @@ async def handle_scan_commits(request: CommitRequest):
             status_code=400, detail="Repository name and username are required."
         )
 
-    result = await fetch_repo_commits(username, repo_name)
+    result = await cache_result(
+        github_commits_cache,
+        make_github_commits_key(username, repo_name),
+        fetch_repo_commits,
+        username,
+        repo_name,
+    )
 
     if "error" in result:
         raise HTTPException(status_code=400, detail=result["error"])
